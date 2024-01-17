@@ -1,0 +1,9 @@
+import { WaveCommand } from 'wave-shell'
+
+export default {
+  run: async (options) => {
+    const { print } = options;
+
+    print.info('Welcome to Wave CLI');
+  }
+} as WaveCommand
