@@ -13,13 +13,13 @@ function createFile(filePath: string, content = '') {
   fs.writeFileSync(filePath, content);
 }
 
-export function createFilesOrDirectories(structure: FilesStructure, currentPath = '') {
+export function createFileStructure(structure: FilesStructure, currentPath = '') {
   for (const key in structure) {
     const newPath = path.join(currentPath, key);
 
     if (typeof structure[key] === 'object' && !Array.isArray(structure[key])) {
       createDirectory(newPath);
-      createFilesOrDirectories(structure[key] as FilesStructure, newPath);
+      createFileStructure(structure[key] as FilesStructure, newPath);
     } else if (Array.isArray(structure[key])) {
       (structure[key] as string[]).forEach((file: string) => {
         const filePath = path.join(newPath, file);

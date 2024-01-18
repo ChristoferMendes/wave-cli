@@ -1,6 +1,6 @@
 import { WaveCommand } from "wave-shell";
-import { FilesStructure, createFilesOrDirectories } from "./utils/create-files-or-directories";
 import { join } from "path";
+import { FilesStructure, createFileStructure } from "../utils/create-file-structure";
 
 export default {
   description: "Initialize a new project",
@@ -14,13 +14,14 @@ export default {
       }
     }
 
-    createFilesOrDirectories(filesStructure);
+    createFileStructure(filesStructure);
 
-    const helpFilePath = join(process.cwd(), `src/commands/${commandName}.ts`);
-    const helpTemplatePath = join(process.cwd(), 'src/templates/command.surf');
-    const result = await compileTemplate(helpTemplatePath, {
+    const commandTemplatePath = join(process.cwd(), 'src/templates/command.surf');
+    const parsedTemplate = await compileTemplate(commandTemplatePath, {
       description: commandDescription
     });
-    Bun.write(helpFilePath, result);
+
+    const commandFilePath = join(process.cwd(), `src/commands/${commandName}.ts`);
+    Bun.write(commandFilePath, parsedTemplate);
   },
 } as WaveCommand;
