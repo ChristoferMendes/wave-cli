@@ -1,6 +1,7 @@
 import { WaveCommand } from 'wave-shell'
 
 export default {
+  description: "{{ description }}",
   run: async (options) => {
     const { print } = options;
 
