@@ -4,7 +4,7 @@ import { join } from "path";
 import { createFileStructure } from "../utils/create-file-structure";
 
 export default {
-  validateArgs: () => {
+  argsSchema: () => {
     return {
       argsArraySchema: z
         .array(
