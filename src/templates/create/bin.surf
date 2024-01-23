@@ -1,0 +1,5 @@
+#!/usr/bin/env bun
+import { Cli } from 'wave-shell'
+
+const cli = new Cli('{{ name }}')
+cli.run()
