@@ -8,7 +8,7 @@ import { z } from "zod";
 
 export default {
   description: "Initialize a new project",
-  validateArgs: () => {
+  argsSchema: () => {
     return {
       argsArraySchema: z
         .array(
