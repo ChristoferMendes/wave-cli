@@ -5,6 +5,6 @@ export default {
   run: async (options) => {
     const { print } = options;
 
-    print.info('Welcome to Wave CLI');
+    print.info('{{ name }} command!');
   }
 } as WaveCommand
