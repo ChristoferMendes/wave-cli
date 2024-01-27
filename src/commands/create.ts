@@ -23,7 +23,9 @@ export default {
     let projectName = name;
 
     if (!name) {
-      projectName = await prompt.ask("What is the name of your project?");
+      const response = await prompt.ask("What is the name of your project?");
+
+      projectName = response.value
     }
 
     const filesStructure: FilesStructure = {
