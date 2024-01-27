@@ -1,5 +1,5 @@
 {
-  "name": "wave-cli",
+  "name": "wave-shell-cli",
   "module": "index.ts",
   "type": "module",
   "version": "0.0.1",
@@ -13,6 +13,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "wave-shell": "^0.0.1",
     "zod": "^3.22.4"
   },
   "bin": {
