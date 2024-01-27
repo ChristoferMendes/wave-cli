@@ -2,6 +2,7 @@
   "name": "wave-cli",
   "module": "index.ts",
   "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "dev": "bun run src/index.ts"
   },
