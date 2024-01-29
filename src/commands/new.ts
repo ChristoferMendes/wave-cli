@@ -18,7 +18,7 @@ export default {
   async run({ args, compileTemplate }) {
     const [name, description] = args.argsArray
 
-    const templatesFolder = join(process.cwd(), "src/templates/")
+    const templatesFolder = join(__dirname, "src/templates/")
 
     const filePath = join(templatesFolder, "command.surf")
 
@@ -33,6 +33,6 @@ export default {
       name
     })
     
-    Bun.write(join(process.cwd(), "src", "commands", `${name}.ts`), result)
+    Bun.write(join(__dirname, "src", "commands", `${name}.ts`), result)
   },
 } as WaveCommand

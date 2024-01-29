@@ -36,7 +36,7 @@ export default {
     };
     createFileStructure(filesStructure);
 
-    const creationTemplatePath = join(process.cwd(), "src/templates/create/");
+    const creationTemplatePath = join(__dirname, "src/templates/create/");
 
     const bin = await compileTemplate(join(creationTemplatePath, "bin.surf"), {
       projectName,
@@ -49,9 +49,9 @@ export default {
       }
     );
 
-    Bun.write(join(process.cwd(), "bin", projectName), bin);
+    Bun.write(join(__dirname, "bin", projectName), bin);
     Bun.write(
-      join(process.cwd(), "src", "commands", `${projectName}.ts`),
+      join(__dirname, "src", "commands", `${projectName}.ts`),
       command
     );
 
