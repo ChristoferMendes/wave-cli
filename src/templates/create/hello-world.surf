@@ -1,4 +1,4 @@
-import { WaveCommand } from 'wave-shell'
+import type { WaveCommand } from 'wave-shell'
 
 export default {
   description: "{{ description }}",
