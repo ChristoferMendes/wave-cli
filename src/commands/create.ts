@@ -1,7 +1,7 @@
-import { WaveCommand } from "wave-shell";
-import { join } from "path";
-import { z } from "zod";
 import { $ } from 'bun';
+import { join } from "path";
+import { WaveCommand } from "wave-shell";
+import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
 const root = join(__dirname, '..', '..');
@@ -45,8 +45,8 @@ async function compileTemplates(projectName: string, compileTemplate: (filePath:
 }
 
 async function writeTemplates(projectName: string, bin: string, command: string) {
-  $`cd ${projectName} && bun write bin/${projectName} ${bin}`;
-  $`cd ${projectName} && bun write src/commands/${projectName}.ts ${command}`;
+  Bun.write(join(process.cwd(), projectName, "bin", projectName), bin);
+  Bun.write(join(process.cwd(), projectName, "src", "commands", `${projectName}.ts`), command);
 }
 
 async function installDependencies(projectName: string) {
