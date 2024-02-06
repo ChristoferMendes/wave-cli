@@ -2,7 +2,7 @@
   "name": "wave-shell-cli",
   "module": "index.ts",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "dev": "bun run src/index.ts",
     "build": "bun build --target=bun --minify index.ts --outdir ./dist"
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "bun-plugin-dts": "^0.2.1",
-    "wave-shell": "^0.0.2",
+    "wave-shell": "^0.0.4",
     "zod": "^3.22.4"
   },
   "bin": {
