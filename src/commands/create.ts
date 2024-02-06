@@ -72,7 +72,7 @@ async function writePackageJson(projectName: string, newPackageJson: Record<stri
 }
 
 export default {
-  description: "Initialize a new project",
+  description: "Initialize a new project from scratch",
   argsSchema: () => {
     return {
       argsArraySchema: z
