@@ -1,15 +1,20 @@
-# wave-cli
+# WAVE CLI
 
-To install dependencies:
+A Command Line Interface made with [Wave Shell](https://github.com/ChristoferMendes/wave-shell). This project aims to help you while developing a new CLI!
 
-```bash
-bun install
+### Requirements
+
+- [Bun](https://bun.sh/) installed
+
+### Usage 
+
+```shell
+bunx wave-cli create new-project
 ```
 
-To run:
+### Commands available
 
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.0.4. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+| Name   | Description                           |
+|--------|---------------------------------------|
+| create | Initialize a new project from scratch |
+| new    | Add a new command inside src/commands |
