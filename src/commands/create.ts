@@ -1,6 +1,6 @@
 import { $ } from 'bun';
 import { join } from "path";
-import { WaveCommand } from "wave-shell";
+import { WaveCommand, WavePrint, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
@@ -72,7 +72,16 @@ async function writePackageJson(projectName: string, newPackageJson: Record<stri
 }
 
 async function linkProject(projectName: string) {
-  await $`cd ${projectName} && bun link`;
+  await $`cd ${projectName} && bun link --silent`;
+}
+
+function logLastSteps(projectName: string, print: ReturnType<typeof WavePrint>) {
+  const cdWithColors = waveColors.yellow(`cd ${projectName}`);
+  const projectNameWithColors = waveColors.yellow(projectName);
+
+  print.spaceLine()
+  print.info(`📂 Go to the project folder with: ${cdWithColors}`)
+  print.info(`🎉 You can now type ${projectNameWithColors} to get started`)
 }
 
 export default {
@@ -90,13 +99,13 @@ export default {
   run: async ({ args, compileTemplate, prompt, print }) => {
     const projectName = await getProjectName(prompt, args);
 
-    print.success(`Creating project ${projectName}...`);
+    print.success(`✨ Creating project ${projectName}...`);
     await createProjectStructure(projectName);
 
     const { bin, command } = await compileTemplates(projectName, compileTemplate);
     await writeTemplates(projectName, bin, command);
 
-    print.info("Installing dependencies...");
+    print.info("📦 Installing dependencies...");
     await installDependencies(projectName);
 
     const newPackageJson = injectBinNameOnPackageJson(getPackageJson(projectName), projectName);
@@ -104,6 +113,7 @@ export default {
 
     await linkProject(projectName)
 
-    print.success(`Project ${projectName} created successfully!`);
+    print.success(`🚀 Project ${projectName} created successfully!`);
+    logLastSteps(projectName, print)
   },
 } as WaveCommand;
