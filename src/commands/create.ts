@@ -71,6 +71,10 @@ async function writePackageJson(projectName: string, newPackageJson: Record<stri
   Bun.write(join(packageJsonPath), JSON.stringify(newPackageJson, null, 2));
 }
 
+async function linkProject(projectName: string) {
+  await $`cd ${projectName} && bun link`;
+}
+
 export default {
   description: "Initialize a new project from scratch",
   argsSchema: () => {
@@ -97,6 +101,8 @@ export default {
 
     const newPackageJson = injectBinNameOnPackageJson(getPackageJson(projectName), projectName);
     await writePackageJson(projectName, newPackageJson);
+
+    await linkProject(projectName)
 
     print.success(`Project ${projectName} created successfully!`);
   },

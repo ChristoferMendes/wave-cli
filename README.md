@@ -9,7 +9,7 @@ A Command Line Interface made with [Wave Shell](https://github.com/ChristoferMen
 ### Usage 
 
 ```shell
-bunx wave-cli create new-project
+bunx wave-shell-cli create
 ```
 
 ### Commands available
