@@ -84,6 +84,15 @@ function logLastSteps(projectName: string, print: ReturnType<typeof WavePrint>) 
   print.info(`🎉 You can now type ${projectNameWithColors} to get started`)
 }
 
+function hasBunInstalled() {
+  return $`bun --version`.text()
+}
+
+function installBun(print: ReturnType<typeof WavePrint>) {
+  print.info("📦 Installing bun...")
+  return $`curl -fsSL https://bun.sh/install | bash`
+}
+
 export default {
   description: "Initialize a new project from scratch",
   argsSchema: () => {
@@ -97,6 +106,13 @@ export default {
     };
   },
   run: async ({ args, compileTemplate, prompt, print }) => {
+    const isBunInstalled = await hasBunInstalled();
+
+    if (!isBunInstalled) {
+      await prompt.confirm("Bun is not installed. Do you want to install it?");
+      await installBun(print);
+    }
+
     const projectName = await getProjectName(prompt, args);
 
     print.success(`✨ Creating project ${projectName}...`);
@@ -115,5 +131,6 @@ export default {
 
     print.success(`🚀 Project ${projectName} created successfully!`);
     logLastSteps(projectName, print)
+
   },
 } as WaveCommand;
