@@ -59,7 +59,7 @@ async function writeTemplates(projectName: string, bin: string, command: string)
 }
 
 async function installDependencies(projectName: string) {
-  await $`cd ${projectName} && bun init > /dev/null`;
+  await $`cd ${projectName} && bun init -y > /dev/null`;
   await $`cd ${projectName} && bun install wave-shell --silent`;
 }
 
