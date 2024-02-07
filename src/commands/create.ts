@@ -1,17 +1,26 @@
 import { $ } from 'bun';
 import { join } from "path";
-import { WaveCommand, WavePrint, waveColors } from "wave-shell";
+import { WaveArguments, WaveCommand, WavePrint, waveColors, prompt as waveShellPrompt } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
 const root = join(__dirname, '..', '..');
 
-async function getProjectName(prompt: any, args: any) {
-  const [name] = args.argsArray;
+async function getProjectName(prompt: typeof waveShellPrompt, args: WaveArguments, print: ReturnType<typeof WavePrint>) {
+  let [name] = args.argsArray;
+
   if (!name) {
-    const response = await prompt.ask("What is the name of your project?");
-    return response.value;
+    const projectName = await prompt.ask("What's the name of your project?");
+    name = projectName.value
   }
+
+  const isValidPackageJsonNameRegex = /^[a-z0-9-_.]+$/;
+
+  if (!isValidPackageJsonNameRegex.test(name)) {
+    print.error("Input should be a valid package.json name (only lowercase letters, numbers, and -_. are allowed).");
+    process.exit(1);
+  }
+
   return name;
 }
 
@@ -84,15 +93,6 @@ function logLastSteps(projectName: string, print: ReturnType<typeof WavePrint>) 
   print.info(`🎉 You can now type ${projectNameWithColors} to get started`)
 }
 
-function hasBunInstalled() {
-  return $`bun --version`.text()
-}
-
-function installBun(print: ReturnType<typeof WavePrint>) {
-  print.info("📦 Installing bun...")
-  return $`curl -fsSL https://bun.sh/install | bash`
-}
-
 export default {
   description: "Initialize a new project from scratch",
   argsSchema: () => {
@@ -101,19 +101,18 @@ export default {
         .array(
           z.string().refine((data) => isNaN(Number(data)), {
             message: "Input should be a string and not a number.",
+          }).refine((data) => {
+            const isValidPackageJsonNameRegex = /^[a-z0-9-_.]+$/;
+
+            return isValidPackageJsonNameRegex.test(data);
+          }, {
+            message: "Input should be a valid package.json name (only lowercase letters, numbers, and -_. are allowed)."
           })
         )
     };
   },
   run: async ({ args, compileTemplate, prompt, print }) => {
-    const isBunInstalled = await hasBunInstalled();
-
-    if (!isBunInstalled) {
-      await prompt.confirm("Bun is not installed. Do you want to install it?");
-      await installBun(print);
-    }
-
-    const projectName = await getProjectName(prompt, args);
+    const projectName = await getProjectName(prompt, args, print);
 
     print.success(`✨ Creating project ${projectName}...`);
     await createProjectStructure(projectName);
