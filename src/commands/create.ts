@@ -1,17 +1,16 @@
 import { $ } from 'bun';
 import { join } from "path";
-import { WaveArguments, WaveCommand, WavePrint, waveColors, prompt as waveShellPrompt } from "wave-shell";
+import { WaveArguments, WaveCommand, WavePrint, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
 const root = join(__dirname, '..', '..');
 
-async function getProjectName(prompt: typeof waveShellPrompt, args: WaveArguments, print: ReturnType<typeof WavePrint>) {
+async function getProjectName(args: WaveArguments, print: ReturnType<typeof WavePrint>) {
   let [name] = args.argsArray;
 
   if (!name) {
-    const projectName = await prompt.ask("What's the name of your project?");
-    name = projectName.value
+    name = await prompt.ask("What's the name of your project? ");
   }
 
   const isValidPackageJsonNameRegex = /^[a-z0-9-_.]+$/;
@@ -111,8 +110,8 @@ export default {
         )
     };
   },
-  run: async ({ args, compileTemplate, prompt, print }) => {
-    const projectName = await getProjectName(prompt, args, print);
+  run: async ({ args, compileTemplate, print }) => {
+    const projectName = await getProjectName(args, print);
 
     print.success(`✨ Creating project ${projectName}...`);
     await createProjectStructure(projectName);
