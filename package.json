@@ -2,7 +2,7 @@
   "name": "wave-shell-cli",
   "module": "index.ts",
   "type": "module",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "scripts": {
     "dev": "bun run index.ts",
     "build": "bun src/builder.ts",
