@@ -2,7 +2,7 @@
   "name": "wave-shell-cli",
   "module": "index.ts",
   "type": "module",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "scripts": {
     "dev": "bun run src/index.ts",
     "build": "bun build --target=bun --minify index.ts --outdir ./dist"
