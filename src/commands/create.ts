@@ -101,9 +101,6 @@ async function createNpmIgnore(projectName: string) {
   await Bun.write(join(process.cwd(), projectName, ".npmignore"), npmIgnoreContent);
 }
 
-async function removeRootIndexFile(projectName: string) {
-  await $`cd ${projectName} && rm index.ts`;
-}
 
 async function linkProject(projectName: string) {
   await $`cd ${projectName} && bun link --silent`;
@@ -160,7 +157,6 @@ export default {
 
     await createNpmIgnore(projectName);
 
-    await removeRootIndexFile(projectName);
     await linkProject(projectName)
 
     print.success(`🚀 Project ${projectName} created successfully!`);

@@ -5,21 +5,16 @@ async function builder() {
   const print = WavePrint('Builder');
   print.info("Building project...");
 
-  const allCommandFiles = await getAllCommandFiles();
-  const entrypointsFromCommands = getEntrypointsFromCommands(allCommandFiles);
-  await buildBun(entrypointsFromCommands);
 
-  await $`touch dist/.built`;
+  const extraEntrypoints = await getAllFilesInsideSubdirectoriesOfSrc();
+  const extraEntrypointsString = extraEntrypoints.split("\n").filter(Boolean);
 
-  print.success("Project built successfully!");
+  await buildBun(extraEntrypointsString);
 }
 
-async function getAllCommandFiles() {
-  return await $`ls src/commands`.text();
-}
 
-function getEntrypointsFromCommands(allCommandFiles: string): string[] {
-  return allCommandFiles.split("\n").filter(Boolean).map((file) => `src/commands/${file}`);
+async function getAllFilesInsideSubdirectoriesOfSrc() {
+  return await $`find src -type f -mindepth 2`.text();
 }
 
 async function buildBun(extraEntrypoints: string[]) {
