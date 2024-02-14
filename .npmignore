@@ -1,4 +1,4 @@
-bin/
+bin/wave-cli
 dist/
 node_modules/
 src/
@@ -8,3 +8,4 @@ bun.lockb
 .gitignore
 index.ts
 tsconfig.json
+.github
