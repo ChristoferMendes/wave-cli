@@ -1,6 +1,6 @@
 {
   "name": "wave-shell-cli",
-  "module": "index.ts",
+  "main": "dist/index.js",
   "type": "module",
   "version": "0.0.21",
   "scripts": {
