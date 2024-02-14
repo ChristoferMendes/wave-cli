@@ -4,8 +4,9 @@
   "type": "module",
   "version": "0.0.19",
   "scripts": {
-    "dev": "bun run src/index.ts",
-    "build": "bun build --target=bun --minify index.ts --outdir ./dist"
+    "dev": "bun run index.ts",
+    "build": "bun src/builder.ts",
+    "start": "bun run dist/index.js"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
