@@ -4,6 +4,6 @@ import { join } from 'path'
 
 const devMode = existsSync(`${__dirname}/../src`)
 
-const projectRoot = devMode ? join(__dirname, '..') : join(__dirname, 'dist')
+const projectRoot = devMode ? join(__dirname, '..') : join(__dirname, '..', 'dist')
 const cli = new Cli('{{ name }}', projectRoot)
 cli.run()
