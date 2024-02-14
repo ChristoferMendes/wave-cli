@@ -1,0 +1,10 @@
+bin/
+dist/
+node_modules/
+src/
+package.json
+bun.lockb
+.git
+.gitignore
+index.ts
+tsconfig.json
