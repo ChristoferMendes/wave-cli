@@ -1,4 +1,5 @@
 import { $ } from 'bun';
+import { readFileSync } from "fs";
 import { join } from "path";
 import { WaveArguments, WaveCommand, WavePrint, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
@@ -53,8 +54,14 @@ async function compileTemplates(projectName: string, compileTemplate: (filePath:
 }
 
 async function writeTemplates(projectName: string, bin: string, command: string) {
-  Bun.write(join(process.cwd(), projectName, "bin", projectName), bin);
-  Bun.write(join(process.cwd(), projectName, "src", "commands", `${projectName}.ts`), command);
+  await Bun.write(join(process.cwd(), projectName, "bin", projectName), bin);
+  await Bun.write(join(process.cwd(), projectName, "src", "commands", `${projectName}.ts`), command);
+}
+
+async function writeBuilderScript(projectName: string) {
+  const builderScript = readFileSync(join(root, "src/builder.ts"), "utf-8");
+
+  await Bun.write(join(process.cwd(), projectName, "src", "builder.ts"), builderScript);
 }
 
 async function installDependencies(projectName: string) {
@@ -74,9 +81,24 @@ function injectBinNameOnPackageJson(packageJson: Record<string, any>, projectNam
   return packageJson;
 }
 
+function injectBuildScriptOnPackageJson(packageJson: Record<string, any>) {
+  packageJson.scripts = {
+    ...packageJson.scripts,
+    build: "bun run src/builder.ts",
+  };
+
+  return packageJson;
+}
+
 async function writePackageJson(projectName: string, newPackageJson: Record<string, any>) {
   const packageJsonPath = join(process.cwd(), projectName, "package.json");
-  Bun.write(join(packageJsonPath), JSON.stringify(newPackageJson, null, 2));
+  await Bun.write(join(packageJsonPath), JSON.stringify(newPackageJson, null, 2));
+}
+
+async function createNpmIgnore(projectName: string) {
+  const npmIgnoreContent = readFileSync(join(root, ".npmignore"), "utf-8");
+
+  await Bun.write(join(process.cwd(), projectName, ".npmignore"), npmIgnoreContent);
 }
 
 async function linkProject(projectName: string) {
@@ -91,6 +113,7 @@ function logLastSteps(projectName: string, print: ReturnType<typeof WavePrint>) 
   print.info(`📂 Go to the project folder with: ${cdWithColors}`)
   print.info(`🎉 You can now type ${projectNameWithColors} to get started`)
 }
+
 
 export default {
   description: "Initialize a new project from scratch",
@@ -119,11 +142,19 @@ export default {
     const { bin, command } = await compileTemplates(projectName, compileTemplate);
     await writeTemplates(projectName, bin, command);
 
+    await writeBuilderScript(projectName)
+
     print.info("📦 Installing dependencies...");
     await installDependencies(projectName);
 
-    const newPackageJson = injectBinNameOnPackageJson(getPackageJson(projectName), projectName);
-    await writePackageJson(projectName, newPackageJson);
+    const packageJson = getPackageJson(projectName);
+
+    injectBinNameOnPackageJson(packageJson, projectName);
+    injectBuildScriptOnPackageJson(packageJson);
+
+    await writePackageJson(projectName, packageJson);
+
+    await createNpmIgnore(projectName);
 
     await linkProject(projectName)
 
