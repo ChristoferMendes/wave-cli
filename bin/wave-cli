@@ -6,6 +6,7 @@ import { Cli } from 'wave-shell'
 
 const srcExists = existsSync(join(__dirname, '..', 'src'))
 
+console.log({ __dirname })
 console.log({ srcExists })
 
 const projectRoot = srcExists ? join(__dirname, '..') : join(__dirname, '..', 'dist')
