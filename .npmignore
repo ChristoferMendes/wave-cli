@@ -1,8 +1,5 @@
-bin/wave-cli
-dist/
 node_modules/
 src/
-package.json
 bun.lockb
 .git
 .gitignore
