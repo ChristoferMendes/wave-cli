@@ -1,11 +1,12 @@
 import { $ } from 'bun';
 import { readFileSync } from "fs";
 import { join } from "path";
-import { WaveArguments, WaveCommand, WavePrint, prompt, waveColors } from "wave-shell";
+import { WaveArguments, WaveCommand, WavePrint, getRoot, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
-const root = join(__dirname, '..', '..');
+const baseRoot = join(__dirname, '..', '..');
+const root  = getRoot(baseRoot);
 
 async function getProjectName(args: WaveArguments, print: ReturnType<typeof WavePrint>) {
   let [name] = args.argsArray;

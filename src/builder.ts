@@ -10,6 +10,8 @@ async function builder() {
   const extraEntrypointsString = extraEntrypoints.split("\n").filter(Boolean);
 
   await buildBun(extraEntrypointsString);
+
+  print.success("Project built successfully!");
 }
 
 
