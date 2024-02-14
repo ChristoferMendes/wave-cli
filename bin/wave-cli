@@ -1,7 +1,13 @@
 #!/usr/bin/env bun
+import { existsSync } from 'fs'
 import { join } from 'path'
 import { Cli } from 'wave-shell'
 
-const projectRoot = join(__dirname, '..') 
+
+const srcExists = existsSync(join(__dirname, '..', 'src'))
+
+console.log({ srcExists })
+
+const projectRoot = srcExists ? join(__dirname, '..') : join(__dirname, '..', 'dist')
 const cli = new Cli('Wave Cli 🌊', projectRoot)
 cli.run()
