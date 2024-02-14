@@ -1,6 +1,6 @@
 import { $ } from 'bun';
 import { readFileSync } from "fs";
-import { join } from "path";
+import { join, } from "path";
 import { WaveArguments, WaveCommand, WavePrint, getRoot, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
@@ -40,12 +40,12 @@ async function createProjectStructure(projectName: string) {
 async function compileTemplates(projectName: string, compileTemplate: (filePath: string, data: Record<string, any>) => Promise<string>) {
   const creationTemplatePath = join(root, "src/templates/create/");
 
-  const bin = await compileTemplate(join(creationTemplatePath, "bin.surf"), {
+  const bin = await compileTemplate(join(creationTemplatePath, "bin"), {
     projectName,
   });
 
   const command = await compileTemplate(
-    join(creationTemplatePath, "hello-world.surf"),
+    join(creationTemplatePath, "hello-world"),
     {
       description: "Hello World command",
     }
