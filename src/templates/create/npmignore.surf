@@ -1,0 +1,8 @@
+node_modules/
+src/
+bun.lockb
+.git
+.gitignore
+index.ts
+tsconfig.json
+.github
