@@ -19,7 +19,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "surfstar": "0.0.10",
     "wave-shell": "0.0.31",
     "zod": "^3.22.4"
   },
