@@ -19,7 +19,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "wave-shell": "0.0.31",
+    "wave-shell": "0.0.32",
     "zod": "^3.22.4"
   },
   "bin": {
