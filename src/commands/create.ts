@@ -1,12 +1,13 @@
 import { $ } from 'bun';
-import { readFileSync } from "fs";
 import { join, } from "path";
-import { WaveArguments, WaveCommand, WavePrint, getRoot, prompt, waveColors } from "wave-shell";
+import { WaveArguments, WaveCommand, WavePrint, changeRootToDistOnProdMode, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
 const baseRoot = join(__dirname, '..', '..');
-const root  = getRoot(baseRoot);
+const root  = changeRootToDistOnProdMode(baseRoot);
+
+type CompileTemplateFn = (filePath: string, data: Record<string, any>) => Promise<string>;
 
 async function getProjectName(args: WaveArguments, print: ReturnType<typeof WavePrint>) {
   let [name] = args.argsArray;
@@ -40,12 +41,12 @@ async function createProjectStructure(projectName: string) {
 async function compileTemplates(projectName: string, compileTemplate: (filePath: string, data: Record<string, any>) => Promise<string>) {
   const creationTemplatePath = join(root, "src/templates/create/");
 
-  const bin = await compileTemplate(join(creationTemplatePath, "bin"), {
+  const bin = await compileTemplate(join(creationTemplatePath, "bin.surf"), {
     projectName,
   });
 
   const command = await compileTemplate(
-    join(creationTemplatePath, "hello-world"),
+    join(creationTemplatePath, "hello-world.surf"),
     {
       description: "Hello World command",
     }
@@ -59,8 +60,8 @@ async function writeTemplates(projectName: string, bin: string, command: string)
   await Bun.write(join(process.cwd(), projectName, "src", "commands", `${projectName}.ts`), command);
 }
 
-async function writeBuilderScript(projectName: string) {
-  const builderScript = readFileSync(join(root, "src/builder.ts"), "utf-8");
+async function writeBuilderScript(projectName: string, compileTemplate: CompileTemplateFn) {
+  const builderScript = await compileTemplate(join(root, "src/templates/create/builder.surf"), {});
 
   await Bun.write(join(process.cwd(), projectName, "src", "builder.ts"), builderScript);
 }
@@ -96,8 +97,8 @@ async function writePackageJson(projectName: string, newPackageJson: Record<stri
   await Bun.write(join(packageJsonPath), JSON.stringify(newPackageJson, null, 2));
 }
 
-async function createNpmIgnore(projectName: string) {
-  const npmIgnoreContent = readFileSync(join(root, ".npmignore"), "utf-8");
+async function createNpmIgnore(projectName: string, compileTemplate: CompileTemplateFn) {
+  const npmIgnoreContent = await compileTemplate(join(root, "src/templates/create/npmignore.surf"), {})
 
   await Bun.write(join(process.cwd(), projectName, ".npmignore"), npmIgnoreContent);
 }
@@ -144,7 +145,7 @@ export default {
     const { bin, command } = await compileTemplates(projectName, compileTemplate);
     await writeTemplates(projectName, bin, command);
 
-    await writeBuilderScript(projectName)
+    await writeBuilderScript(projectName, compileTemplate)
 
     print.info("📦 Installing dependencies...");
     await installDependencies(projectName);
@@ -156,7 +157,7 @@ export default {
 
     await writePackageJson(projectName, packageJson);
 
-    await createNpmIgnore(projectName);
+    await createNpmIgnore(projectName, compileTemplate);
 
     await linkProject(projectName)
 
