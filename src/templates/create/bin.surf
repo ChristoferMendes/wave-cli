@@ -2,8 +2,9 @@
 import { Cli } from 'wave-shell'
 import { join } from 'path'
 
-const devMode = existsSync(`${__dirname}/../src`)
+const isDevMode = existsSync(join(__dirname, '..', 'src'))
 
-const projectRoot = devMode ? join(__dirname, '..') : join(__dirname, '..', 'dist')
+const projectRoot = isDevMode ? join(__dirname, '..') : join(__dirname, '..', 'dist')
+
 const cli = new Cli('{{ name }}', projectRoot)
 cli.run()
