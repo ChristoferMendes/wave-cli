@@ -6,9 +6,10 @@ async function builder() {
   print.info("Building project...");
 
   const extraEntrypoints = await getAllFilesInsideSubdirectoriesOfSrc();
-  const extraEntrypointsString = extraEntrypoints.split("\n").filter(Boolean);
+  const extraEntrypointsString = extraEntrypoints.split("\n").filter(Boolean).filter(file => !file.endsWith('.surf'))
 
   await buildBun(extraEntrypointsString);
+  await putTemplatesFolderInsideDist()
 
   print.success("Project built successfully!");
 }
@@ -24,6 +25,10 @@ async function buildBun(extraEntrypoints: string[]) {
     minify: true,
     target: "bun",
   });
+}
+
+async function putTemplatesFolderInsideDist() {
+  await $`cp -r src/templates dist/src/templates`;
 }
 
 await builder();
