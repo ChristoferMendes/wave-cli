@@ -6,7 +6,7 @@ import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
 const isDevMode = existsSync(join(__dirname, '..', '..', 'src'))
-const root = !isDevMode ? join(__dirname, '..', '..') : join(__dirname, '..', '..', 'dist');
+const root = isDevMode ? join(__dirname, '..', '..') : join(__dirname, '..', '..', 'dist');
 
 type CompileTemplateFn = (filePath: string, data: Record<string, any>) => Promise<string>;
 
