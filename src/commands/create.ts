@@ -1,11 +1,10 @@
 import { $ } from 'bun';
 import { join, } from "path";
-import { WaveArguments, WaveCommand, WavePrint, changeRootToDistOnProdMode, prompt, waveColors } from "wave-shell";
+import { WaveArguments, WaveCommand, WavePrint, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
-const baseRoot = join(__dirname, '..', '..');
-const root  = changeRootToDistOnProdMode(baseRoot);
+const root = join(__dirname, '..', '..');
 
 type CompileTemplateFn = (filePath: string, data: Record<string, any>) => Promise<string>;
 
