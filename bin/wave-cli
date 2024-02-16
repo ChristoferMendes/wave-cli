@@ -3,9 +3,9 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import { Cli } from 'wave-shell'
 
-const isDevMode = existsSync(join(__dirname, '..', 'src'))
+const isDevMode = existsSync(join(import.meta.dir, '..', 'src'))
 
-const projectRoot = isDevMode ? join(__dirname, '..') : join(__dirname, '..', 'dist')
+const projectRoot = isDevMode ? join(import.meta.dir, '..') : join(import.meta.dir, '..', 'dist')
 
 const cli = new Cli('Wave Cli 🌊', projectRoot)
 cli.run()

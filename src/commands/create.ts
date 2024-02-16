@@ -5,8 +5,10 @@ import { WaveArguments, WaveCommand, WavePrint, prompt, waveColors } from "wave-
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
-const isDevMode = existsSync(join(__dirname, '..', '..', 'src'))
-const root = isDevMode ? join(__dirname, '..', '..') : join(__dirname, '..', '..', 'dist');
+
+
+const isDevMode = existsSync(join(import.meta.dir, '..', '..', 'src'))
+const root = isDevMode ? join(import.meta.dir, '..', '..') : join(import.meta.dir, '..', '..', 'dist');
 
 type CompileTemplateFn = (filePath: string, data: Record<string, any>) => Promise<string>;
 
