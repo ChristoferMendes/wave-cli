@@ -1,10 +1,12 @@
 import { $ } from 'bun';
+import { existsSync } from "fs";
 import { join, } from "path";
 import { WaveArguments, WaveCommand, WavePrint, prompt, waveColors } from "wave-shell";
 import { z } from "zod";
 import { FilesStructure, createFileStructure } from "~/utils/create-file-structure";
 
-const root = join(__dirname, '..', '..');
+const isDevMode = existsSync(join(__dirname, '..', '..', 'src'))
+const root = !isDevMode ? join(__dirname, '..', '..') : join(__dirname, '..', '..', 'dist');
 
 type CompileTemplateFn = (filePath: string, data: Record<string, any>) => Promise<string>;
 
