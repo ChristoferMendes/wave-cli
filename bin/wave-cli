@@ -7,6 +7,5 @@ const isDevMode = existsSync(join(__dirname, '..', 'src'))
 
 const projectRoot = isDevMode ? join(__dirname, '..') : join(__dirname, '..', 'dist')
 
-console.log(projectRoot)
 const cli = new Cli('Wave Cli 🌊', projectRoot)
 cli.run()
