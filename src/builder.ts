@@ -1,17 +1,20 @@
-import { $ } from "bun";
-import { WavePrint } from "wave-shell";
+import { $ } from 'bun';
+import { WavePrint } from 'wave-shell';
 
 async function builder() {
   const print = WavePrint('Builder');
-  print.info("Building project...");
+  print.info('Building project...');
 
   const extraEntrypoints = await getAllFilesInsideSubdirectoriesOfSrc();
-  const extraEntrypointsString = extraEntrypoints.split("\n").filter(Boolean).filter(file => !file.endsWith('.surf'))
+  const extraEntrypointsString = extraEntrypoints
+    .split('\n')
+    .filter(Boolean)
+    .filter((file) => !file.endsWith('.surf'));
 
   await buildBun(extraEntrypointsString);
-  await putTemplatesFolderInsideDist()
+  await putTemplatesFolderInsideDist();
 
-  print.success("Project built successfully!");
+  print.success('Project built successfully!');
 }
 
 async function getAllFilesInsideSubdirectoriesOfSrc() {
@@ -20,10 +23,10 @@ async function getAllFilesInsideSubdirectoriesOfSrc() {
 
 async function buildBun(extraEntrypoints: string[]) {
   await Bun.build({
-    entrypoints: ["index.ts", ...extraEntrypoints],
-    outdir: "dist",
+    entrypoints: ['index.ts', ...extraEntrypoints],
+    outdir: 'dist',
     minify: true,
-    target: "bun",
+    target: 'bun'
   });
 }
 

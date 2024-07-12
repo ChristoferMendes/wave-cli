@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export type FilesStructure = {
   [key: string]: string[] | FilesStructure;
@@ -21,11 +21,11 @@ export function createFileStructure(structure: FilesStructure, currentPath = '')
       createDirectory(newPath);
       createFileStructure(structure[key] as FilesStructure, newPath);
     } else if (Array.isArray(structure[key])) {
-      (structure[key] as string[]).forEach((file: string) => {
+      for (const file of structure[key]) {
         const filePath = path.join(newPath, file);
         createDirectory(path.dirname(filePath));
         createFile(filePath);
-      });
+      }
     } else {
       throw new Error(`Invalid structure: key ${key} must be either a FilesStructure or an array of strings`);
     }

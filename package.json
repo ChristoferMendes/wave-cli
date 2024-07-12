@@ -5,10 +5,14 @@
   "version": "0.0.41",
   "scripts": {
     "dev": "bun run index.ts",
-    "build": "bun src/builder.ts",
-    "start": "bun run dist/index.js"
+    "build": "bun run format && bun run lint && bun src/builder.ts",
+    "build:local": "bun src/builder.ts",
+    "start": "bun run dist/index.js",
+    "lint": "pnpm biome lint --unsafe --write",
+    "format": "biome format --write ."
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@types/inquirer": "^9.0.7",
     "bun-types": "latest"
   },
