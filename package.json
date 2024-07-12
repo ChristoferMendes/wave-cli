@@ -13,7 +13,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@types/inquirer": "^9.0.7",
     "bun-types": "latest"
   },
   "resolutions": {
