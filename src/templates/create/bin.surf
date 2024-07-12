@@ -8,4 +8,4 @@ const isDevMode = existsSync(join(import.meta.dir, '..', 'src'))
 const projectRoot = isDevMode ? join(import.meta.dir, '..') : join(import.meta.dir, '..', 'dist')
 
 const cli = new Cli('{{ name }}', projectRoot)
-cli.run()
+await cli.run()
