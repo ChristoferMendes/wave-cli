@@ -1,33 +1,16 @@
-import { $ } from "bun";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-import {
-  type WaveArguments,
-  type WaveCommand,
-  type WavePrint,
-  prompt,
-  waveColors,
-} from "wave-shell";
-import { z } from "zod";
-import {
-  type FilesStructure,
-  createFileStructure,
-} from "~/utils/create-file-structure";
+import { $ } from 'bun';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { type WaveArguments, type WaveCommand, type WavePrint, prompt, waveColors } from 'wave-shell';
+import { z } from 'zod';
+import { type FilesStructure, createFileStructure } from '~/utils/create-file-structure';
 
-const isDevMode = existsSync(join(import.meta.dir, "..", "..", "src"));
-const root = isDevMode
-  ? join(import.meta.dir, "..", "..")
-  : join(import.meta.dir, "..", "..", "dist");
+const isDevMode = existsSync(join(import.meta.dir, '..', '..', 'src'));
+const root = isDevMode ? join(import.meta.dir, '..', '..') : join(import.meta.dir, '..', '..', 'dist');
 
-type CompileTemplateFn = (
-  filePath: string,
-  data: Record<string, unkown>,
-) => Promise<string>;
+type CompileTemplateFn = (filePath: string, data: Record<string, unkown>) => Promise<string>;
 
-async function getProjectName(
-  args: WaveArguments,
-  print: ReturnType<typeof WavePrint>,
-) {
+async function getProjectName(args: WaveArguments, print: ReturnType<typeof WavePrint>) {
   let [name] = args.argsArray;
 
   if (!name) {
@@ -37,9 +20,7 @@ async function getProjectName(
   const isValidPackageJsonNameRegex = /^[a-z0-9-_.]+$/;
 
   if (!isValidPackageJsonNameRegex.test(name)) {
-    print.error(
-      "Input should be a valid package.json name (only lowercase letters, numbers, and -_. are allowed).",
-    );
+    print.error('Input should be a valid package.json name (only lowercase letters, numbers, and -_. are allowed).');
     process.exit(1);
   }
 
@@ -51,61 +32,39 @@ async function createProjectStructure(projectName: string) {
     [projectName]: {
       bin: [projectName],
       src: {
-        commands: [`${projectName}.ts`],
-      },
-    },
+        commands: [`${projectName}.ts`]
+      }
+    }
   };
   createFileStructure(filesStructure);
 }
 
 async function compileTemplates(
   projectName: string,
-  compileTemplate: (
-    filePath: string,
-    data: Record<string, unkown>,
-  ) => Promise<string>,
+  compileTemplate: (filePath: string, data: Record<string, unkown>) => Promise<string>
 ) {
-  const creationTemplatePath = join(root, "src/templates/create/");
+  const creationTemplatePath = join(root, 'src/templates/create/');
 
-  const bin = await compileTemplate(join(creationTemplatePath, "bin.surf"), {
-    projectName,
+  const bin = await compileTemplate(join(creationTemplatePath, 'bin.surf'), {
+    projectName
   });
 
-  const command = await compileTemplate(
-    join(creationTemplatePath, "hello-world.surf"),
-    {
-      description: "Hello World command",
-    },
-  );
+  const command = await compileTemplate(join(creationTemplatePath, 'hello-world.surf'), {
+    description: 'Hello World command'
+  });
 
   return { bin, command };
 }
 
-async function writeTemplates(
-  projectName: string,
-  bin: string,
-  command: string,
-) {
-  await Bun.write(join(process.cwd(), projectName, "bin", projectName), bin);
-  await Bun.write(
-    join(process.cwd(), projectName, "src", "commands", `${projectName}.ts`),
-    command,
-  );
+async function writeTemplates(projectName: string, bin: string, command: string) {
+  await Bun.write(join(process.cwd(), projectName, 'bin', projectName), bin);
+  await Bun.write(join(process.cwd(), projectName, 'src', 'commands', `${projectName}.ts`), command);
 }
 
-async function writeBuilderScript(
-  projectName: string,
-  compileTemplate: CompileTemplateFn,
-) {
-  const builderScript = await compileTemplate(
-    join(root, "src/templates/create/builder.surf"),
-    {},
-  );
+async function writeBuilderScript(projectName: string, compileTemplate: CompileTemplateFn) {
+  const builderScript = await compileTemplate(join(root, 'src/templates/create/builder.surf'), {});
 
-  await Bun.write(
-    join(process.cwd(), projectName, "src", "builder.ts"),
-    builderScript,
-  );
+  await Bun.write(join(process.cwd(), projectName, 'src', 'builder.ts'), builderScript);
 }
 
 async function installDependencies(projectName: string) {
@@ -114,16 +73,13 @@ async function installDependencies(projectName: string) {
 }
 
 function getPackageJson(path: string) {
-  const packageJsonPath = join(process.cwd(), path, "package.json");
+  const packageJsonPath = join(process.cwd(), path, 'package.json');
   return require(packageJsonPath);
 }
 
-function injectBinNameOnPackageJson(
-  packageJson: Record<string, unknown>,
-  projectName: string,
-) {
+function injectBinNameOnPackageJson(packageJson: Record<string, unknown>, projectName: string) {
   packageJson.bin = {
-    [projectName]: `bin/${projectName}`,
+    [projectName]: `bin/${projectName}`
   };
   return packageJson;
 }
@@ -131,46 +87,28 @@ function injectBinNameOnPackageJson(
 function injectBuildScriptOnPackageJson(packageJson: Record<string, unknown>) {
   packageJson.scripts = {
     ...packageJson.scripts,
-    build: "bun run src/builder.ts",
+    build: 'bun run src/builder.ts'
   };
 
   return packageJson;
 }
 
-async function writePackageJson(
-  projectName: string,
-  newPackageJson: Record<string, unknown>,
-) {
-  const packageJsonPath = join(process.cwd(), projectName, "package.json");
-  await Bun.write(
-    join(packageJsonPath),
-    JSON.stringify(newPackageJson, null, 2),
-  );
+async function writePackageJson(projectName: string, newPackageJson: Record<string, unknown>) {
+  const packageJsonPath = join(process.cwd(), projectName, 'package.json');
+  await Bun.write(join(packageJsonPath), JSON.stringify(newPackageJson, null, 2));
 }
 
-async function createNpmIgnore(
-  projectName: string,
-  compileTemplate: CompileTemplateFn,
-) {
-  const npmIgnoreContent = await compileTemplate(
-    join(root, "src/templates/create/npmignore.surf"),
-    {},
-  );
+async function createNpmIgnore(projectName: string, compileTemplate: CompileTemplateFn) {
+  const npmIgnoreContent = await compileTemplate(join(root, 'src/templates/create/npmignore.surf'), {});
 
-  await Bun.write(
-    join(process.cwd(), projectName, ".npmignore"),
-    npmIgnoreContent,
-  );
+  await Bun.write(join(process.cwd(), projectName, '.npmignore'), npmIgnoreContent);
 }
 
 async function linkProject(projectName: string) {
   await $`cd ${projectName} && npm link`.quiet();
 }
 
-function logLastSteps(
-  projectName: string,
-  print: ReturnType<typeof WavePrint>,
-) {
+function logLastSteps(projectName: string, print: ReturnType<typeof WavePrint>) {
   const cdWithColors = waveColors.yellow(`cd ${projectName}`);
   const projectNameWithColors = waveColors.yellow(projectName);
 
@@ -180,14 +118,14 @@ function logLastSteps(
 }
 
 export default {
-  description: "Initialize a new project from scratch",
+  description: 'Initialize a new project from scratch',
   argsSchema: () => {
     return {
       argsArraySchema: z.array(
         z
           .string()
           .refine((data) => Number.isNaN(Number(data)), {
-            message: "Input should be a string and not a number.",
+            message: 'Input should be a string and not a number.'
           })
           .refine(
             (data) => {
@@ -196,11 +134,10 @@ export default {
               return isValidPackageJsonNameRegex.test(data);
             },
             {
-              message:
-                "Input should be a valid package.json name (only lowercase letters, numbers, and -_. are allowed).",
-            },
-          ),
-      ),
+              message: 'Input should be a valid package.json name (only lowercase letters, numbers, and -_. are allowed).'
+            }
+          )
+      )
     };
   },
   run: async ({ args, compileTemplate, print }) => {
@@ -209,17 +146,14 @@ export default {
     print.success(`✨ Creating project ${projectName}...`);
     await createProjectStructure(projectName);
 
-    const { bin, command } = await compileTemplates(
-      projectName,
-      compileTemplate,
-    );
+    const { bin, command } = await compileTemplates(projectName, compileTemplate);
     await writeTemplates(projectName, bin, command);
 
     await writeBuilderScript(projectName, compileTemplate);
 
-    print.info("📦 Installing dependencies...");
+    print.info('📦 Installing dependencies...');
     await installDependencies(projectName);
-    print.info("📦 Dependencies installed!");
+    print.info('📦 Dependencies installed!');
 
     const packageJson = getPackageJson(projectName);
 
@@ -234,5 +168,5 @@ export default {
 
     print.success(`🚀 Project ${projectName} created successfully!`);
     logLastSteps(projectName, print);
-  },
+  }
 } as WaveCommand;
