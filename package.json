@@ -8,7 +8,7 @@
     "build": "bun run format && bun run lint && bun src/builder.ts",
     "build:local": "bun src/builder.ts",
     "start": "bun run dist/index.js",
-    "lint": "pnpm biome lint --unsafe --write",
+    "lint": "biome lint --unsafe --write",
     "format": "biome format --write ."
   },
   "devDependencies": {
