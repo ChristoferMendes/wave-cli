@@ -6,3 +6,4 @@ bun.lockb
 index.ts
 tsconfig.json
 .github
+biome.json
